@@ -3,6 +3,8 @@
 reads data from "/proc/stat"
 outputs average cpu/core usage as percentage on console
 
+uses ncurses
+
 example build:
 
 ```bash
