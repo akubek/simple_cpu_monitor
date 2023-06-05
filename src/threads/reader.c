@@ -70,7 +70,7 @@ void stop_reader() {
 }
 
 void set_reader_interval(long ms) {
-    //dont change interval if reader is running;
+    //dont change interval if reader is running
     if(!run_reader) {
         reader_interval = ms;
     }
