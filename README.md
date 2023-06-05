@@ -1,9 +1,10 @@
 # SIMPLE CPU MONITOR
 
-reads data from "/proc/stat"
+Example project!
+On Linux reads data from "/proc/stat"
 outputs average cpu/core usage as percentage on console
 
-uses ncurses
+uses [NCURSES](https://invisible-island.net/ncurses/)
 
 example build:
 
