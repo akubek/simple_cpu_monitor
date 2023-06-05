@@ -1,0 +1,9 @@
+.*
+!.gitignore
+bin/
+build/
+
+*.cmake
+CMakeFiles/
+Makefile
+CMakeCache.txt
