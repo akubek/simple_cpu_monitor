@@ -2,7 +2,6 @@
 #define PRINTER_H
 #define _GNU_SOURCE
 
-#include <threads.h>
 #include <ncurses.h>
 #include <time.h>
 

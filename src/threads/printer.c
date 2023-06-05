@@ -1,6 +1,6 @@
 #include "printer.h"
 
-long printer_interval_ms = 1000;
+long printer_interval = 1000;
 
 int printer_thrd(void *arg) {
     struct timespec start;
