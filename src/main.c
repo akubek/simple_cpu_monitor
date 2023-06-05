@@ -4,7 +4,6 @@ int main() {
     thrd_t printer,reader;
     reader_args reader_arg;
 
-
     printf("Simple CPU Monitor\n");
 
     thrd_create(&reader,reader_thrd,(void *)&reader_arg);
