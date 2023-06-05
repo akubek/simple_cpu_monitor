@@ -6,6 +6,7 @@ outputs average cpu/core usage as percentage on console
 example build:
 
 ```bash
+#from project directory
 mkdir build
 cd build/
 cmake ../src
