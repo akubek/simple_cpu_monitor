@@ -8,7 +8,7 @@ int reader_thrd(void *arg) {
     char * line;
     size_t len = 0;
     ssize_t read;
-    const long core_count = get_nprocs();
+    const int core_count = get_nprocs();
     struct timespec start;
 
     corestat * core_stat;

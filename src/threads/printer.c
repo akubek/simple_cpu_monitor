@@ -4,6 +4,10 @@ long printer_interval = 1000;
 
 int printer_thrd(void *arg) {
     struct timespec start;
+    printer_args * args = (printer_args *)arg;
+    cpuperc_queue * input_q = args->input_q;
+    cpuperc * newest;
+    const int core_count = get_nprocs();
     
     //ncurses setup
     initscr();
@@ -16,14 +20,19 @@ int printer_thrd(void *arg) {
     while(input != 'q') {
         clock_gettime(CLOCK_MONOTONIC,&start);
         input=getch();
-        
-
-        int core_num = 2;
         clear();
-        printw("CPU usage:\n");
-        printw("cpu: %.2f %%\n", 10.0);
-        for(int i = 0; i < core_num; i++) {
-            printw("core%d %.2f %%", i, 1.0);
+
+        if(input_q->size == 0) {
+            printw("No CPU usage data");
+        } else {
+            while(input_q->front != NULL) {
+                newest = dequeue_cpupercq(input_q);
+            }
+            printw("CPU usage:\n");
+            printw("cpu: %.2f %%\n", newest->cores_perc[0]);
+            for(int i = 1; i <= core_count; i++) {
+                printw("core%d %.2f %%\n", i, newest->cores_perc[i]);
+            }
         }
         refresh();
 
