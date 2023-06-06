@@ -1,5 +1,6 @@
 #ifndef CPUSTAT_H
 #define CPUSTAT_H
+#include <time.h>
 
 typedef struct corestat {
     int core_num;
@@ -7,7 +8,7 @@ typedef struct corestat {
 }corestat;
 
 typedef struct cpustat {
-    int core_count;
+    struct timespec t;
     corestat * cores_stat;
 }cpustat;
 

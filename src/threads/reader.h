@@ -17,8 +17,8 @@ void set_reader_interval(long ms);
 int reader_thrd(void *);
 
 typedef struct reader_args{
-    cpustat_queue analyzer_q;
-    cpustat_queue logger_q;
+    cpustat_queue * analyzer_q;
+    cpustat_queue * logger_q;
 }reader_args;
 
 #endif

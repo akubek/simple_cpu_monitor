@@ -14,6 +14,7 @@ struct cpustat_node {
 };
 
 typedef struct cpustat_queue {
+    int size;
     cpustat_node *front;
     cpustat_node *back;
 }cpustat_queue;

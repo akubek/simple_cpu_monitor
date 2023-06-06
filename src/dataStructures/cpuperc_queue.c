@@ -1,17 +1,17 @@
-#include "cpustat_queue.h"
+#include "cpuperc_queue.h"
 
-void init_cpustatq(struct cpustat_queue * q) {
+void init_cpupercq(struct cpuperc_queue * q) {
     q->size = 0;
     q->front = NULL;
     q->back = NULL;
 }
 
-int enqueue_cpustatq(cpustat_queue *q,cpustat *cpu_stat) {
-    cpustat_node *new_back = malloc(sizeof *new_back);
+int enqueue_cpupercq(cpuperc_queue *q,cpuperc * cpu_perc) {
+    cpuperc_node *new_back = malloc(sizeof *new_back);
     if(new_back == NULL) {
         return 1;
     }
-    new_back->cpu_stat = cpu_stat;
+    new_back->cpu_perc = cpu_perc;
     new_back->next = NULL;
 
     if(q->front == NULL) {
@@ -25,21 +25,21 @@ int enqueue_cpustatq(cpustat_queue *q,cpustat *cpu_stat) {
     return 0;
 }
 
-cpustat *dequeue_cpustatq(cpustat_queue *q) {
-    cpustat_node * old_front = q->front;
+cpuperc *dequeue_cpupercq(cpuperc_queue *q) {
+    cpuperc_node * old_front = q->front;
     q->front = q->front->next;
     q->size--;
     
-    cpustat *cpu_stat = old_front->cpu_stat;
+    cpuperc *cpu_perc = old_front->cpu_perc;
     free(old_front);
-    return cpu_stat;
+    return cpu_perc;
 }
 
-void empty_cpustatq(cpustat_queue *q) {
-    cpustat * elem;
+void empty_cpupercq(cpuperc_queue *q) {
+    cpuperc * elem;
     while(q->front != NULL) {
         elem = dequeue_cpustatq(q);
-        free(elem->cores_stat);
+        free(elem->cores_perc);
         free(elem);
     }
 }
