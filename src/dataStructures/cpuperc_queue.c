@@ -1,12 +1,16 @@
 #include "cpuperc_queue.h"
 
-void init_cpupercq(struct cpuperc_queue * q) {
+void cpuperc_init_q(struct cpuperc_queue * q) {
+    mtx_init(&q->qmtx,mtx_plain);
     q->size = 0;
     q->front = NULL;
     q->back = NULL;
 }
 
-int enqueue_cpupercq(cpuperc_queue *q,cpuperc * cpu_perc) {
+int cpuperc_enqueue(cpuperc_queue *q,cpuperc * cpu_perc) {
+    if(mtx_lock(&q->qmtx)==thrd_error) {
+        exit(1);
+    }
     cpuperc_node *new_back = malloc(sizeof *new_back);
     if(new_back == NULL) {
         return 1;
@@ -21,25 +25,35 @@ int enqueue_cpupercq(cpuperc_queue *q,cpuperc * cpu_perc) {
         q->back = new_back;
     }
     q->size++;
+    mtx_unlock(&q->qmtx);
     
     return 0;
 }
 
-cpuperc *dequeue_cpupercq(cpuperc_queue *q) {
+cpuperc *cpuperc_dequeue(cpuperc_queue *q) {
+    if(mtx_lock(&q->qmtx)==thrd_error) {
+        exit(1);
+    }
     cpuperc_node * old_front = q->front;
     q->front = q->front->next;
     q->size--;
     
     cpuperc *cpu_perc = old_front->cpu_perc;
     free(old_front);
+    mtx_unlock(&q->qmtx);
     return cpu_perc;
 }
 
-void empty_cpupercq(cpuperc_queue *q) {
+void cpuperc_delete_q(cpuperc_queue *q) {
+    if(mtx_lock(&q->qmtx)==thrd_error) {
+        exit(1);
+    }
     cpuperc * elem;
     while(q->front != NULL) {
-        elem = dequeue_cpustatq(q);
+        elem = cpuperc_dequeue(q);
         free(elem->cores_perc);
         free(elem);
     }
+    mtx_unlock(&q->qmtx);
+    mtx_destroy(&q->qmtx);
 }

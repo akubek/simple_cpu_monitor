@@ -50,7 +50,7 @@ int reader_thrd(void *arg) {
             &(core_stat->user), &(core_stat->nice), &(core_stat->system), &(core_stat->idle), &(core_stat->iowait), &(core_stat->irq), &(core_stat->softirq), &(core_stat->steal));
         }
         //queue data to anylyzer
-        if(enqueue_cpustatq(analyzer_q,cpu_stat)) {
+        if(cpustat_enqueue(analyzer_q,cpu_stat)) {
             fprintf(stderr, "Reader: could not add element to q\n");
             exit(1);
         }

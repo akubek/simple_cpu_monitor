@@ -26,7 +26,7 @@ int printer_thrd(void *arg) {
             printw("No CPU usage data");
         } else {
             while(input_q->front != NULL) {
-                newest = dequeue_cpupercq(input_q);
+                newest = cpuperc_dequeue(input_q);
             }
             printw("CPU usage:\n");
             printw("cpu: %.2f %%\n", newest->cores_perc[0]);

@@ -1,12 +1,16 @@
 #include "cpustat_queue.h"
 
-void init_cpustatq(struct cpustat_queue * q) {
+void cpustat_init_q(struct cpustat_queue * q) {
+    mtx_init(&q->qmtx,mtx_plain);
     q->size = 0;
     q->front = NULL;
     q->back = NULL;
 }
 
-int enqueue_cpustatq(cpustat_queue *q,cpustat *cpu_stat) {
+int cpustat_enqueue(cpustat_queue *q,cpustat *cpu_stat) {
+    if(mtx_lock(&q->qmtx)==thrd_error) {
+        exit(1);
+    }
     cpustat_node *new_back = malloc(sizeof *new_back);
     if(new_back == NULL) {
         return 1;
@@ -21,25 +25,34 @@ int enqueue_cpustatq(cpustat_queue *q,cpustat *cpu_stat) {
         q->back = new_back;
     }
     q->size++;
-    
+    mtx_unlock(&q->qmtx);
     return 0;
 }
 
-cpustat *dequeue_cpustatq(cpustat_queue *q) {
+cpustat *cpustat_dequeue(cpustat_queue *q) {
+    if(mtx_lock(&q->qmtx)==thrd_error) {
+        exit(1);
+    }
     cpustat_node * old_front = q->front;
     q->front = q->front->next;
     q->size--;
     
     cpustat *cpu_stat = old_front->cpu_stat;
     free(old_front);
+    mtx_unlock(&q->qmtx);
     return cpu_stat;
 }
 
-void empty_cpustatq(cpustat_queue *q) {
+void cpustat_delete_q(cpustat_queue *q) {
+    if(mtx_lock(&q->qmtx)==thrd_error) {
+        exit(1);
+    }
     cpustat * elem;
     while(q->front != NULL) {
-        elem = dequeue_cpustatq(q);
+        elem = cpustat_dequeue(q);
         free(elem->cores_stat);
         free(elem);
     }
+    mtx_unlock(&q->qmtx);
+    mtx_destroy(&q->qmtx);
 }

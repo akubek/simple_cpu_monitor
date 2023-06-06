@@ -2,7 +2,7 @@
 #define CPUSTAT_Q_H
 
 #include <stdlib.h>
-
+#include <threads.h>
 
 #include "cpustat.h"
 
@@ -14,14 +14,15 @@ struct cpustat_node {
 };
 
 typedef struct cpustat_queue {
+    mtx_t qmtx;
     int size;
     cpustat_node *front;
     cpustat_node *back;
 }cpustat_queue;
 
-void init_cpustatq(cpustat_queue *q);
-int enqueue_cpustatq(cpustat_queue *q, cpustat *cpu_stat) ;
-cpustat *dequeue_cpustatq(cpustat_queue *q);
-void empty_cpustatq(cpustat_queue *q);
+void cpustat_init_q(cpustat_queue *q);
+int cpustat_enqueue(cpustat_queue *q, cpustat *cpu_stat) ;
+cpustat *cpustat_dequeue(cpustat_queue *q);
+void cpustat_delete_q(cpustat_queue *q);
 
 #endif

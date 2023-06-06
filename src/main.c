@@ -4,8 +4,8 @@ int main() {
     thrd_t analyzer,printer,reader;
     cpustat_queue analyzer_q, reader_logger_q;
     cpuperc_queue printer_q, analyzer_logger_q;
-    init_cpustatq(&analyzer_q); init_cpustatq(&reader_logger_q);
-    init_cpupercq(&printer_q); init_cpupercq(&analyzer_logger_q);
+    cpustat_init_q(&analyzer_q); cpustat_init_q(&reader_logger_q);
+    cpuperc_init_q(&printer_q); cpuperc_init_q(&analyzer_logger_q);
     reader_args rargs = {&analyzer_q,&reader_logger_q};
     analyzer_args aargs = {&analyzer_q,&printer_q,&analyzer_logger_q};
     printer_args pargs = {&printer_q};

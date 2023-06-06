@@ -54,12 +54,12 @@ void update_data(cpustat_queue * newest_data, cpustat_queue * q) {
     cpustat * elem;
     while (q->front != NULL)
     {   
-        elem = dequeue_cpustatq(q); 
-        enqueue_cpustatq(newest_data,elem);
+        elem = cpustat_dequeue(q); 
+        cpustat_enqueue(newest_data,elem);
     }
     //remove old datapoints
     while (newest_data->front != NULL && is_older_than(newest_data->front->cpu_stat,2)) {
-        elem = dequeue_cpustatq(newest_data);
+        elem = cpustat_dequeue(newest_data);
         free(elem->cores_stat);
         free(elem);
     }
@@ -73,7 +73,7 @@ int analyzer_thrd(void *arg) {
     cpuperc_queue * logger_q = args->logger_q;
 
     cpustat_queue newest_data; //for storing latest cpu usage data points for about 2s
-    init_cpustatq(&newest_data);
+    cpustat_init_q(&newest_data);
 
     const int core_count = get_nprocs();
 
@@ -107,7 +107,7 @@ int analyzer_thrd(void *arg) {
         cpu_perc->cores_perc = usage_perc;
 
         //queue data to printer
-        enqueue_cpupercq(printer_q,cpu_perc);
+        cpuperc_enqueue(printer_q,cpu_perc);
 
         //TODO logger
             
