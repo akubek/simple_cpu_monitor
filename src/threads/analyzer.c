@@ -88,7 +88,6 @@ int analyzer_thrd(void *arg) {
         update_data(&newest_data,input_q);
 
         if(newest_data.size < 2) {  //skip iteration and wait if less than 2 datapoints to calculate delta
-            printf("analyzer thread sleeping\n");
             sleepfor(start,analyzer_interval);
             continue;
         }

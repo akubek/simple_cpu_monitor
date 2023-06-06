@@ -14,13 +14,13 @@ int main() {
 
     thrd_create(&reader,reader_thrd,(void *)(&reader_arg));
     thrd_create(&analyzer,analyzer_thrd,(void *)&analyzer_arg);
-    //thrd_create(&printer,printer_thrd,NULL);
+    thrd_create(&printer,printer_thrd,NULL);
     
 
-    //thrd_join(printer,NULL);
-    //stop_reader();
-    //thrd_join(reader,NULL);
-    //stop_analyzer();
+    thrd_join(printer,NULL);
+    stop_reader();
+    thrd_join(reader,NULL);
+    stop_analyzer();
     thrd_join(analyzer,NULL);
 
     return 0;
