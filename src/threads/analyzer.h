@@ -12,6 +12,7 @@
 #include "../dataStructures/cpustat.h"
 #include "../dataStructures/cpuperc_queue.h"
 #include "../dataStructures/cpuperc.h"
+#include "../dataStructures/log_queue.h"
 
 void stop_analyzer();
 void set_analyzer_interval(long ms);
@@ -23,7 +24,7 @@ typedef struct analyzer_args{
     cpustat_queue * analyzer_q;
     //output
     cpuperc_queue * printer_q;
-    cpuperc_queue * logger_q;
+    log_queue * logger_q;
 }analyzer_args;
 
 #endif

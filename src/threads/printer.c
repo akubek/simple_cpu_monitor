@@ -31,7 +31,7 @@ int printer_thrd(void *arg) {
                 free(newest);
             }
             newest = cpuperc_dequeue(input_q);
-            printw("CPU usage:\n");
+            printw("CPU usage monitor [q to quit]:\n");
             printw("cpu: %.2f %%\n", newest->cores_perc[0]);
             for(int i = 1; i <= core_count; i++) {
                 printw("core%d %.2f %%\n", i, newest->cores_perc[i]);

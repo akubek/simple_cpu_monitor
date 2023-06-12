@@ -70,7 +70,9 @@ int analyzer_thrd(void *arg) {
     analyzer_args * args = (analyzer_args *)arg;
     cpustat_queue * input_q = args->analyzer_q;
     cpuperc_queue * printer_q = args->printer_q;
-    cpuperc_queue * logger_q = args->logger_q;
+    log_queue * logger_q = args->logger_q;
+    char * log_msg;
+    int max_len = 0;
 
     cpustat_queue newest_data; //for storing latest cpu usage data points for about 2s
     cpustat_init_q(&newest_data);
@@ -112,10 +114,22 @@ int analyzer_thrd(void *arg) {
             exit(1);
         }
 
+        //queue msg to logger
+        log_msg = calloc(LOG_MSG_LEN, sizeof * log_msg);
+        if(log_msg == NULL) {
+            fprintf(stderr, "Analyzer: could not allocate memory for log msg\n");
+            exit(1);
+        }
+        snprintf(log_msg,LOG_MSG_LEN,"ANALYZER[%ld:%03ld]:cpu  %.2f %%", start.tv_sec, start.tv_nsec/1000000,cpu_perc->cores_perc[0]);
+        if(log_enqueue(logger_q,log_msg,start)) { 
+            fprintf(stderr, "Analyzer: could not add element to log q\n");
+            exit(1);
+        }
+
         sleepfor(start,analyzer_interval);
     }
 
-    cpuperc_delete_q(&newest_data);
+    cpustat_delete_q(&newest_data);
 
     return 0;
 }
