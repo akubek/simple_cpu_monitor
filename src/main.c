@@ -1,6 +1,6 @@
 #include "main.h"
 
-//TODO cleanup / renaming
+//TODO cleanup / renaming / tests
 
 thrd_t analyzer,printer,reader,logger;
 cpustat_queue analyzer_q;
