@@ -25,14 +25,19 @@ int printer_thrd(void *arg) {
         if(input_q->size == 0) {
             printw("No CPU usage data");
         } else {
-            while(input_q->front != NULL) {
+            while(input_q->size > 1) {
                 newest = cpuperc_dequeue(input_q);
+                free(newest->cores_perc);
+                free(newest);
             }
+            newest = cpuperc_dequeue(input_q);
             printw("CPU usage:\n");
             printw("cpu: %.2f %%\n", newest->cores_perc[0]);
             for(int i = 1; i <= core_count; i++) {
                 printw("core%d %.2f %%\n", i, newest->cores_perc[i]);
             }
+            free(newest->cores_perc);
+            free(newest);
         }
         refresh();
 

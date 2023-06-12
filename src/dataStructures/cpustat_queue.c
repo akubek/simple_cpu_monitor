@@ -44,14 +44,14 @@ cpustat *cpustat_dequeue(cpustat_queue *q) {
 }
 
 void cpustat_delete_q(cpustat_queue *q) {
-    if(mtx_lock(&q->qmtx)==thrd_error) {
-        exit(1);
-    }
     cpustat * elem;
     while(q->front != NULL) {
         elem = cpustat_dequeue(q);
         free(elem->cores_stat);
         free(elem);
+    }
+    if(mtx_lock(&q->qmtx)==thrd_error) {
+        exit(1);
     }
     mtx_unlock(&q->qmtx);
     mtx_destroy(&q->qmtx);

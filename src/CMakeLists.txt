@@ -15,7 +15,8 @@ include_directories(${CURSES_INCLUDE_DIR})
 
 add_executable(cpumon main.c)
 target_link_libraries(cpumon PUBLIC Analyzer Printer Reader SleepFor CPUStatQueue CPUPercQueue ${CURSES_LIBRARIES})
-target_compile_options(cpumon PRIVATE -Wall -Wextra)
+#target_compile_options(cpumon PRIVATE -Wall -Wextra)
+add_compile_options(-Wall -Wextra -g)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)

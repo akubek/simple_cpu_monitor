@@ -3,9 +3,10 @@
 bool run_reader = false;
 long reader_interval = 200;
 
+//MAIN FUNCTION
 int reader_thrd(void *arg) {
-    FILE * fp;
-    char * line;
+    FILE * fp = NULL;
+    char * line = NULL;
     size_t len = 0;
     ssize_t read;
     const int core_count = get_nprocs();
@@ -59,7 +60,7 @@ int reader_thrd(void *arg) {
         fclose(fp);
         sleepfor(start,reader_interval);
     }
-    
+    free(line);
     return 0;
 }
 

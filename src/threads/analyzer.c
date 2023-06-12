@@ -107,12 +107,16 @@ int analyzer_thrd(void *arg) {
         cpu_perc->cores_perc = usage_perc;
 
         //queue data to printer
-        cpuperc_enqueue(printer_q,cpu_perc);
+        if(cpuperc_enqueue(printer_q,cpu_perc)) {
+            fprintf(stderr, "Analyzer: could not add element to q\n");
+            exit(1);
+        }
 
-        //TODO logger
-            
         sleepfor(start,analyzer_interval);
     }
+
+    cpuperc_delete_q(&newest_data);
+
     return 0;
 }
 

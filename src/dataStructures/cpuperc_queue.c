@@ -45,14 +45,14 @@ cpuperc *cpuperc_dequeue(cpuperc_queue *q) {
 }
 
 void cpuperc_delete_q(cpuperc_queue *q) {
-    if(mtx_lock(&q->qmtx)==thrd_error) {
-        exit(1);
-    }
     cpuperc * elem;
     while(q->front != NULL) {
         elem = cpuperc_dequeue(q);
         free(elem->cores_perc);
         free(elem);
+    }
+    if(mtx_lock(&q->qmtx)==thrd_error) {
+        exit(1);
     }
     mtx_unlock(&q->qmtx);
     mtx_destroy(&q->qmtx);
