@@ -1,10 +1,11 @@
 #include "reader.h"
 
-bool run_reader = false;
+atomic_bool run_reader = false;
 long reader_interval = 200;
 
 //MAIN FUNCTION
 int reader_thrd(void *arg) {
+    run_reader = true;
     FILE * fp = NULL;
     char * line = NULL;
     size_t len = 0;
@@ -20,7 +21,6 @@ int reader_thrd(void *arg) {
     char * log_msg;
     int max_len = 0;
 
-    run_reader = true;
     while(run_reader) {
         clock_gettime(CLOCK_MONOTONIC,&start);
         fp = fopen("/proc/stat","r");

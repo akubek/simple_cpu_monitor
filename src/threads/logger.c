@@ -1,11 +1,12 @@
 #include "logger.h"
 
-bool logger_run = false;
+atomic_bool logger_run = false;
 long logger_interval = 1000;
 
 void log_current_data(FILE * fp, log_queue * log_q);
 
 int logger_thrd(void *args) {
+    logger_run = true;
     logger_args * largs = (logger_args *)args;
     log_queue * log_q = largs->log_q;
     FILE * fp = NULL;
@@ -18,7 +19,6 @@ int logger_thrd(void *args) {
         exit(1);
     }
 
-    logger_run = true;
     while(logger_run) {
         clock_gettime(CLOCK_MONOTONIC,&start);
 

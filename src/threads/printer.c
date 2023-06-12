@@ -1,8 +1,10 @@
 #include "printer.h"
 
+atomic_bool printer_run = false;
 long printer_interval = 1000;
 
 int printer_thrd(void *arg) {
+    printer_run = true;
     struct timespec start;
     printer_args * args = (printer_args *)arg;
     cpuperc_queue * input_q = args->input_q;
@@ -17,7 +19,7 @@ int printer_thrd(void *arg) {
     int input = 0;
 
     //primary loop
-    while(input != 'q') {
+    while(input != 'q' && printer_run) {
         clock_gettime(CLOCK_MONOTONIC,&start);
         input=getch();
         clear();
@@ -44,5 +46,14 @@ int printer_thrd(void *arg) {
         sleepfor(start,1000);
     }
     endwin();
+    printer_run = false;
     return 0;
+}
+
+void printer_stop () {
+    printer_run = false;
+}
+
+bool printer_running () {
+    return printer_run;
 }

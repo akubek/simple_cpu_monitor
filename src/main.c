@@ -1,11 +1,43 @@
 #include "main.h"
 
-int main() {
-    thrd_t analyzer,printer,reader,logger;
+//TODO cleanup / renaming
 
-    cpustat_queue analyzer_q;
-    cpuperc_queue printer_q;
-    log_queue log_q;
+thrd_t analyzer,printer,reader,logger;
+cpustat_queue analyzer_q;
+cpuperc_queue printer_q;
+log_queue log_q;
+
+void end_threads () {
+    if (printer_running()) {
+        printer_stop();
+        thrd_join(printer,NULL);
+    }
+    stop_reader();
+    thrd_join(reader,NULL);
+    stop_analyzer();
+    thrd_join(analyzer,NULL);
+    logger_stop();
+    thrd_join(logger,NULL);
+
+    cpustat_delete_q(&analyzer_q);
+    cpuperc_delete_q(&printer_q);
+    log_delete_q(&log_q);
+
+}
+
+void terminate (int signum) {
+    printf("Signal caught, exiting...\n");
+    end_threads();
+    printf("Threads ended.\n");
+    exit(0);
+}
+
+int main() {
+    struct sigaction act;
+    memset(&act, 0, sizeof act);
+    act.sa_handler = terminate;
+    sigaction(SIGTERM, &act, NULL);
+    
     cpustat_init_q(&analyzer_q);
     cpuperc_init_q(&printer_q);
     log_init_q(&log_q);
@@ -20,16 +52,7 @@ int main() {
     thrd_create(&logger,logger_thrd,(void *)&largs);
     
     thrd_join(printer,NULL);
-    stop_reader();
-    thrd_join(reader,NULL);
-    stop_analyzer();
-    thrd_join(analyzer,NULL);
-    logger_stop();
-    thrd_join(logger,NULL);
-
-    cpustat_delete_q(&analyzer_q);
-    cpuperc_delete_q(&printer_q);
-    log_delete_q(&log_q);
+    end_threads();
 
     return 0;
 }

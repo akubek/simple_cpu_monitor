@@ -1,6 +1,6 @@
 #include "analyzer.h"
 
-bool run_analyzer = false;
+atomic_bool run_analyzer = false;
 long analyzer_interval = 500;
 
 int is_older_than(cpustat * data,int seconds) {
@@ -67,6 +67,7 @@ void update_data(cpustat_queue * newest_data, cpustat_queue * q) {
 
 //MAIN FUNCTION
 int analyzer_thrd(void *arg) {
+    run_analyzer = true;
     analyzer_args * args = (analyzer_args *)arg;
     cpustat_queue * input_q = args->analyzer_q;
     cpuperc_queue * printer_q = args->printer_q;
@@ -84,7 +85,6 @@ int analyzer_thrd(void *arg) {
     float * usage_perc;
     cpuperc * cpu_perc;
 
-    run_analyzer = true;
     while(run_analyzer){
         clock_gettime(CLOCK_MONOTONIC,&start);
         update_data(&newest_data,input_q);

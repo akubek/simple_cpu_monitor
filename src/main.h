@@ -1,5 +1,8 @@
+#define _GNU_SOURCE
 #include <stdio.h>
+#include <signal.h>
 #include <threads.h>
+#include <unistd.h>
 
 #include "./threads/analyzer.h"
 #include "./threads/printer.h"
