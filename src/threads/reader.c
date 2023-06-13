@@ -2,6 +2,7 @@
 
 atomic_bool run_reader = false;
 long reader_interval = 200;
+struct timespec reader_last_run = { 0, 0 };
 
 //MAIN FUNCTION
 int reader_thrd(void *arg) {
@@ -23,6 +24,7 @@ int reader_thrd(void *arg) {
 
     while(run_reader) {
         clock_gettime(CLOCK_MONOTONIC,&start);
+        reader_last_run = start;
         fp = fopen("/proc/stat","r");
         if(!fp){
             fprintf(stderr, "Reader: could not open file /proc/stat, stopping\n");
@@ -89,9 +91,17 @@ void stop_reader() {
     run_reader = false;
 }
 
+bool reader_running() {
+    return run_reader;
+}
+
 void set_reader_interval(long ms) {
     //dont change interval if reader is running
     if(!run_reader) {
         reader_interval = ms;
     }
+}
+
+struct timespec reader_check() {
+    return reader_last_run;
 }

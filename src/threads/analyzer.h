@@ -17,8 +17,10 @@
 
 void stop_analyzer();
 void set_analyzer_interval(long ms);
+bool analyzer_running();
 
 int analyzer_thrd(void *);
+struct timespec analyzer_check();
 
 typedef struct analyzer_args{
     //input

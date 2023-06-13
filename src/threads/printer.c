@@ -2,6 +2,7 @@
 
 atomic_bool printer_run = false;
 long printer_interval = 1000;
+struct timespec printer_last_run = { 0, 0 };
 
 int printer_thrd(void *arg) {
     printer_run = true;
@@ -21,6 +22,7 @@ int printer_thrd(void *arg) {
     //primary loop
     while(input != 'q' && printer_run) {
         clock_gettime(CLOCK_MONOTONIC,&start);
+        printer_last_run = start;
         input=getch();
         clear();
 
@@ -43,7 +45,7 @@ int printer_thrd(void *arg) {
         }
         refresh();
 
-        sleepfor(start,1000);
+        sleepfor(start,printer_interval);
     }
     endwin();
     printer_run = false;
@@ -56,4 +58,8 @@ void printer_stop () {
 
 bool printer_running () {
     return printer_run;
+}
+
+struct timespec printer_check() {
+    return printer_last_run;
 }

@@ -2,7 +2,7 @@
 
 //TODO cleanup / renaming / tests
 
-thrd_t analyzer,printer,reader,logger;
+thrd_t analyzer,printer,reader,logger,watchdog;
 cpustat_queue analyzer_q;
 cpuperc_queue printer_q;
 log_queue log_q;
@@ -12,6 +12,8 @@ void end_threads () {
         printer_stop();
         thrd_join(printer,NULL);
     }
+    watchdog_stop();
+    thrd_join(watchdog,NULL);
     stop_reader();
     thrd_join(reader,NULL);
     stop_analyzer();
@@ -26,9 +28,9 @@ void end_threads () {
 }
 
 void terminate (int signum) {
-    printf("Signal caught, exiting...\n");
+    fprintf(stderr,"Sigterm caught, ending threads...\n");
     end_threads();
-    printf("Threads ended.\n");
+    fprintf(stderr,"Threads ended, exiting.\n");
     exit(0);
 }
 
@@ -46,10 +48,14 @@ int main() {
     printer_args pargs = {&printer_q};
     logger_args largs = {&log_q};
 
+    watchdog_set_args(&log_q);
+
     thrd_create(&reader,reader_thrd,(void *)(&rargs));
     thrd_create(&analyzer,analyzer_thrd,(void *)&aargs);
     thrd_create(&printer,printer_thrd,(void *)&pargs);
     thrd_create(&logger,logger_thrd,(void *)&largs);
+    sleep(1); //wait some time before starting watchdog
+    thrd_create(&watchdog,watchdog_thrd,NULL);
     
     thrd_join(printer,NULL);
     end_threads();

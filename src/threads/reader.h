@@ -16,8 +16,10 @@
 
 void stop_reader();
 void set_reader_interval(long ms);
+bool reader_running();
 
 int reader_thrd(void *);
+struct timespec reader_check();
 
 typedef struct reader_args{
     cpustat_queue * analyzer_q;

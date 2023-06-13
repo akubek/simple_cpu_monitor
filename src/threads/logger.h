@@ -15,8 +15,10 @@
 #include "../dataStructures/log_queue.h"
 
 void logger_stop();
+bool logger_running();
 
 int logger_thrd(void *);
+struct timespec logger_check();
 
 typedef struct logger_args{
     //input

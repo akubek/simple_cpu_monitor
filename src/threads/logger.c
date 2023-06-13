@@ -2,6 +2,7 @@
 
 atomic_bool logger_run = false;
 long logger_interval = 1000;
+struct timespec logger_last_run = { 0, 0 };
 
 void log_current_data(FILE * fp, log_queue * log_q);
 
@@ -21,6 +22,7 @@ int logger_thrd(void *args) {
 
     while(logger_run) {
         clock_gettime(CLOCK_MONOTONIC,&start);
+        logger_last_run = start;
 
         log_current_data(fp, log_q);
 
@@ -34,6 +36,10 @@ void logger_stop() {
     logger_run = false;
 }
 
+bool logger_running() {
+    return logger_run;
+}
+
 void log_current_data(FILE * fp, log_queue * log_q) {
     char * msg;
 
@@ -42,4 +48,8 @@ void log_current_data(FILE * fp, log_queue * log_q) {
         fprintf(fp,"%s\n",msg);
         free(msg);
     }
+}
+
+struct timespec logger_check() {
+    return logger_last_run;
 }

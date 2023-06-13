@@ -2,6 +2,7 @@
 
 atomic_bool run_analyzer = false;
 long analyzer_interval = 500;
+struct timespec analyzer_last_run = { 0, 0 };
 
 int is_older_than(cpustat * data,int seconds) {
     //old if is older than 2 sec
@@ -87,6 +88,7 @@ int analyzer_thrd(void *arg) {
 
     while(run_analyzer){
         clock_gettime(CLOCK_MONOTONIC,&start);
+        analyzer_last_run = start;
         update_data(&newest_data,input_q);
 
         if(newest_data.size < 2) {  //skip iteration and wait if less than 2 datapoints to calculate delta
@@ -138,9 +140,17 @@ void stop_analyzer() {
     run_analyzer = false;
 }
 
+bool analyzer_running() {
+    return run_analyzer;
+}
+
 void set_analyzer_interval(long ms) {
     //dont change interval if reader is running
     if(!run_analyzer) {
         analyzer_interval = ms;
     }
+}
+
+struct timespec analyzer_check() {
+    return analyzer_last_run;
 }

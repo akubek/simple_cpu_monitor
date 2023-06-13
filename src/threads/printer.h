@@ -10,9 +10,11 @@
 #include "../common/sleepfor.h"
 #include "../dataStructures/cpuperc_queue.h"
 
-int printer_thrd(void *);
 void printer_stop();
 bool printer_running();
+
+int printer_thrd(void *);
+struct timespec printer_check();
 
 typedef struct printer_args{
     cpuperc_queue * input_q;
