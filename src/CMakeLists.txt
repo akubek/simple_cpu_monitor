@@ -14,7 +14,7 @@ include_directories(${CURSES_INCLUDE_DIR})
 
 
 add_executable(cpumon main.c)
-target_link_libraries(cpumon PUBLIC Analyzer Printer Reader Logger Watchdog SleepFor CPUMonUtil CPUStatQueue CPUPercQueue LogQueue ${CURSES_LIBRARIES})
+target_link_libraries(cpumon PUBLIC Analyzer Printer Reader Logger Watchdog CPUMonUtil CPUStatQueue CPUPercQueue LogQueue ${CURSES_LIBRARIES})
 #target_compile_options(cpumon PRIVATE -Wall -Wextra)
 add_compile_options(-Wall -Wextra -g)
 

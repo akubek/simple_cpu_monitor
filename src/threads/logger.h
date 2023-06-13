@@ -7,7 +7,7 @@
 #include <stdatomic.h>
 #include <time.h>
 
-#include "../common/sleepfor.h"
+#include "../common/cpumon_util.h"
 #include "../dataStructures/cpustat_queue.h"
 #include "../dataStructures/cpustat.h"
 #include "../dataStructures/cpuperc_queue.h"
@@ -19,10 +19,6 @@ bool logger_running();
 
 int logger_thrd(void *);
 struct timespec logger_check();
-
-typedef struct logger_args{
-    //input
-    log_queue * log_q;
-}logger_args;
+bool logger_set_args(log_queue *log_q);
 
 #endif

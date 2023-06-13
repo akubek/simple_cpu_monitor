@@ -1,55 +1,95 @@
 #include "logger.h"
 
-atomic_bool logger_run = false;
-long logger_interval = 1000;
-struct timespec logger_last_run = { 0, 0 };
+atomic_bool _logger_run = false;
+long _logger_interval = 1000;
+struct timespec _logger_last_run = {0, 0};
+log_queue *_log_q = NULL;
 
-void log_current_data(FILE * fp, log_queue * log_q);
+void _log_current_data(FILE *fp, log_queue *log_q);
+bool _logger_guard();
 
-int logger_thrd(void *args) {
-    logger_run = true;
-    logger_args * largs = (logger_args *)args;
-    log_queue * log_q = largs->log_q;
-    FILE * fp = NULL;
+// thread
+int logger_thrd(void *)
+{
+    if (!_logger_guard())
+    {
+        return 1;
+    }
+    _logger_run = true;
+    FILE *fp = NULL;
 
     struct timespec start;
 
-    fp = fopen("cpumon.log","w");
-    if(!fp){
+    fp = fopen("cpumon.log", "w");
+    if (!fp)
+    {
         fprintf(stderr, "Logger: could not create file cpumon.log, stopping\n");
         exit(1);
     }
 
-    while(logger_run) {
-        clock_gettime(CLOCK_MONOTONIC,&start);
-        logger_last_run = start;
+    while (_logger_run)
+    {
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        _logger_last_run = start;
 
-        log_current_data(fp, log_q);
+        _log_current_data(fp, _log_q);
 
-        sleepfor(start,logger_interval);
+        sleep_for(start, _logger_interval);
     }
     fclose(fp);
-
+    _logger_run = false;
+    return 0;
 }
 
-void logger_stop() {
-    logger_run = false;
-}
+void _log_current_data(FILE *fp, log_queue *log_q)
+{
+    char *msg;
 
-bool logger_running() {
-    return logger_run;
-}
-
-void log_current_data(FILE * fp, log_queue * log_q) {
-    char * msg;
-
-    while (log_q->size > 0) {
+    while (log_q->size > 0)
+    {
         msg = log_dequeue(log_q);
-        fprintf(fp,"%s\n",msg);
+        fprintf(fp, "%s\n", msg);
         free(msg);
     }
 }
 
-struct timespec logger_check() {
-    return logger_last_run;
+bool _logger_guard()
+{
+    if (_logger_run)
+    {
+        fprintf(stderr, "Logger: cannot start another thread when already running");
+        return false;
+    }
+    else if (_log_q == NULL)
+    {
+        fprintf(stderr, "Logger: args not set");
+        return false;
+    }
+    return true;
+}
+
+void logger_stop()
+{
+    _logger_run = false;
+}
+
+bool logger_running()
+{
+    return _logger_run;
+}
+
+struct timespec logger_check()
+{
+    return _logger_last_run;
+}
+
+bool logger_set_args(log_queue *log_q)
+{
+    if (_logger_run)
+    {
+        fprintf(stderr, "Logger: cannot change arguments when already running\n");
+        return false;
+    }
+    _log_q = log_q;
+    return true;
 }

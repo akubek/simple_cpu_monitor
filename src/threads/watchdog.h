@@ -22,6 +22,6 @@ void watchdog_stop();
 bool watchdog_set_interval(unsigned long ms);
 
 int watchdog_thrd(void *);
-bool watchdog_set_args(log_queue * log_q);
+bool watchdog_set_args(log_queue *log_q);
 
 #endif

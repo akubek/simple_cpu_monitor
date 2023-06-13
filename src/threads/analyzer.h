@@ -8,7 +8,7 @@
 #include <time.h>
 #include <sys/sysinfo.h>
 
-#include "../common/sleepfor.h"
+#include "../common/cpumon_util.h"
 #include "../dataStructures/cpustat_queue.h"
 #include "../dataStructures/cpustat.h"
 #include "../dataStructures/cpuperc_queue.h"
@@ -16,18 +16,11 @@
 #include "../dataStructures/log_queue.h"
 
 void stop_analyzer();
-void set_analyzer_interval(long ms);
+void analyzer_set_interval(long ms);
 bool analyzer_running();
 
 int analyzer_thrd(void *);
 struct timespec analyzer_check();
-
-typedef struct analyzer_args{
-    //input
-    cpustat_queue * analyzer_q;
-    //output
-    cpuperc_queue * printer_q;
-    log_queue * logger_q;
-}analyzer_args;
+bool analyzer_set_args(cpustat_queue *analyzer_q, cpuperc_queue *printer_q, log_queue *logger_q);
 
 #endif

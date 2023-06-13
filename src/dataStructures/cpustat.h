@@ -2,14 +2,16 @@
 #define CPUSTAT_H
 #include <time.h>
 
-typedef struct corestat {
+typedef struct corestat
+{
     int core_num;
     unsigned long long user, nice, system, idle, iowait, irq, softirq, steal;
-}corestat;
+} corestat;
 
-typedef struct cpustat {
+typedef struct cpustat
+{
     struct timespec t;
-    corestat * cores_stat;
-}cpustat;
+    corestat *cores_stat;
+} cpustat;
 
 #endif

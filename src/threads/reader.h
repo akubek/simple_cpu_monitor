@@ -9,21 +9,17 @@
 #include <string.h>
 #include <sys/sysinfo.h>
 
-#include "../common/sleepfor.h"
+#include "../common/cpumon_util.h"
 #include "../dataStructures/cpustat_queue.h"
 #include "../dataStructures/cpustat.h"
 #include "../dataStructures/log_queue.h"
 
-void stop_reader();
-void set_reader_interval(long ms);
+void reader_stop();
+void reader_set_interval(long ms);
 bool reader_running();
 
 int reader_thrd(void *);
 struct timespec reader_check();
-
-typedef struct reader_args{
-    cpustat_queue * analyzer_q;
-    log_queue * logger_q;
-}reader_args;
+bool reader_set_args(cpustat_queue *analyzer_q, log_queue *logger_q);
 
 #endif

@@ -2,9 +2,10 @@
 #define CPUPERC_H
 #include <time.h>
 
-typedef struct cpuperc {
+typedef struct cpuperc
+{
     struct timespec t;
-    float * cores_perc;
-}cpuperc;
+    float *cores_perc;
+} cpuperc;
 
 #endif
