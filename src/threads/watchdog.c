@@ -43,7 +43,8 @@ int watchdog_thrd(void *) {
         sleepfor(start,_watchdog_interval);
     }
 
-
+    free(log_msg);
+    return 0;
 }
 
 bool _watchdog_guard() {
