@@ -13,7 +13,7 @@ char *_reader_msg_start(struct timespec t);
 bool _reader_guard();
 
 // thread
-int reader_thrd(void *)
+int reader_thrd(void *arg)
 {
     if (!_reader_guard())
     {
@@ -51,7 +51,7 @@ int reader_thrd(void *)
         {
             core_stat = &(cpu_stat->cores_stat[i]);
             core_stat->core_num = i - 1;
-            if (read = getline(&line, &len, fp) == -1)
+            if ((read = getline(&line, &len, fp)) == -1)
             {
                 fprintf(stderr, "Reader: error reading line from file or unexpected EOF");
                 exit(1);

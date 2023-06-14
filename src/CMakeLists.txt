@@ -18,8 +18,11 @@ include_directories(${CURSES_INCLUDE_DIR})
 add_executable(cpumon main.c)
 target_link_libraries(cpumon PUBLIC Analyzer Printer Reader Logger Watchdog CPUMonUtil CPUStatQueue CPUPercQueue LogQueue ${CURSES_LIBRARIES})
 
-#target_compile_options(cpumon PRIVATE -Wall -Wextra)
-add_compile_options(-Wall -Wextra -g)
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+    target_compile_options(cpumon PRIVATE "-Weverything" "-Wno-padded" "-Wno-disabled-macro-expansion")
+else()
+    target_compile_options(cpumon PRIVATE "-Wall" "-Wextra")
+endif()
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)

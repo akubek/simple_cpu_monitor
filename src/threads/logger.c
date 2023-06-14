@@ -9,7 +9,7 @@ void _log_current_data(FILE *fp, log_queue *log_q);
 bool _logger_guard();
 
 // thread
-int logger_thrd(void *)
+int logger_thrd(void *arg)
 {
     if (!_logger_guard())
     {

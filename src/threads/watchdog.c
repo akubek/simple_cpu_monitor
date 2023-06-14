@@ -20,7 +20,7 @@ bool _watchdog_threads_check(struct timespec current_t);
 bool _watchdog_guard();
 
 // thread
-int watchdog_thrd(void *)
+int watchdog_thrd(void *arg)
 {
     if (!_watchdog_guard())
     {
@@ -39,13 +39,13 @@ int watchdog_thrd(void *)
             {
                 snprintf(log_msg, LOG_MSG_LEN,
                          "WATCHDOG[%ld:%03ld]: unresponsive thread detected, state: analyzer:%s, reader:%s, printer:%s, logger:responsive",
-                         start.tv_sec, start.tv_nsec / 1000000, _RESP(_analyzer_ok), _RESP(_reader_ok), _RESP(_printer_ok));
+                         start.tv_sec, start.tv_nsec / 1000000, W_RESP(_analyzer_ok), W_RESP(_reader_ok), W_RESP(_printer_ok));
                 log_enqueue(_watchdog_logger_q, log_msg, start);
                 sleep_for(start, 1500); // wait for logger to save msg
             }
             endwin();
             fprintf(stderr, "Watchdog: ERROR unresponsive thread detected, state: analyzer:%s, reader:%s, printer:%s, logger:%s\n",
-                    _RESP(_analyzer_ok), _RESP(_reader_ok), _RESP(_printer_ok), _RESP(_logger_ok));
+                    W_RESP(_analyzer_ok), W_RESP(_reader_ok), W_RESP(_printer_ok), W_RESP(_logger_ok));
             exit(1);
         }
         sleep_for(start, _watchdog_interval);

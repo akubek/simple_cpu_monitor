@@ -8,7 +8,7 @@ cpuperc_queue *_printer_input_q = NULL;
 bool _printer_guard();
 
 // thread
-int printer_thrd(void *)
+int printer_thrd(void *arg)
 {
     if (!_printer_guard())
     {

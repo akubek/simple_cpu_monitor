@@ -1,11 +1,11 @@
 #include "main.h"
 
-thrd_t analyzer, printer, reader, logger, watchdog;
-cpustat_queue analyzer_q;
-cpuperc_queue printer_q;
-log_queue log_q;
+static thrd_t analyzer, printer, reader, logger, watchdog;
+static cpustat_queue analyzer_q;
+static cpuperc_queue printer_q;
+static log_queue log_q;
 
-void _init_threads()
+static void init_threads()
 {
     cpustat_init_q(&analyzer_q);
     cpuperc_init_q(&printer_q);
@@ -18,7 +18,7 @@ void _init_threads()
     watchdog_set_args(&log_q);
 }
 
-void _end_threads()
+static void end_threads()
 {
     if (printer_running())
     {
@@ -39,7 +39,7 @@ void _end_threads()
     log_delete_q(&log_q);
 }
 
-void _run_threads()
+static void run_threads()
 {
     thrd_create(&reader, reader_thrd, NULL);
     thrd_create(&analyzer, analyzer_thrd, NULL);
@@ -49,13 +49,14 @@ void _run_threads()
     thrd_create(&watchdog, watchdog_thrd, NULL);
 
     thrd_join(printer, NULL);
-    _end_threads();
+    end_threads();
 }
 
+__attribute__((noreturn)) void terminate(int signum);
 void terminate(int signum)
 {
-    fprintf(stderr, "Sigterm caught, ending threads...\n");
-    _end_threads();
+    fprintf(stderr, "Sigterm %d caught, ending threads...\n", signum);
+    end_threads();
     fprintf(stderr, "Threads ended, exiting.\n");
     exit(0);
 }
@@ -67,8 +68,8 @@ int main()
     act.sa_handler = terminate;
     sigaction(SIGTERM, &act, NULL);
 
-    _init_threads();
-    _run_threads();
+    init_threads();
+    run_threads();
 
     return 0;
 }

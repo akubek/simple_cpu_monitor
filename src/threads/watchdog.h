@@ -16,9 +16,9 @@
 
 #define WATCHDOG_INTERVAL_MIN 200
 #define WATCHDOG_INTERVAL_MAX 1000
-#define _RESP(x) (x ? "responsive" : "unresponsive")
+#define W_RESP(x) (x ? "responsive" : "unresponsive")
 
-void watchdog_stop();
+void watchdog_stop(void);
 bool watchdog_set_interval(unsigned long ms);
 
 int watchdog_thrd(void *);

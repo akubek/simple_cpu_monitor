@@ -15,12 +15,12 @@
 #include "../dataStructures/cpuperc.h"
 #include "../dataStructures/log_queue.h"
 
-void stop_analyzer();
+void stop_analyzer(void);
 void analyzer_set_interval(long ms);
-bool analyzer_running();
+bool analyzer_running(void);
 
 int analyzer_thrd(void *);
-struct timespec analyzer_check();
+struct timespec analyzer_check(void);
 bool analyzer_set_args(cpustat_queue *analyzer_q, cpuperc_queue *printer_q, log_queue *logger_q);
 
 #endif

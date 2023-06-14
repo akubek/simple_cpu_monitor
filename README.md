@@ -15,11 +15,29 @@ cmake ../src
 cmake --build .
 ```
 
+or with clang:
+
+```bash
+#from project directory
+mkdir clang.build
+cd clang.build/
+cmake -DCMAKE_C_COMPILER=/usr/bin/clang ../src/
+cmake --build
+```
+
+gcc flags added: "-Wall" "-Wextra"\
+clang flags added: "-Weverything" "-Wno-padded" "-Wno-disabled-macro-expansion"
+
 then run:
 
 ```bash
-cd ../bin
-./cpumon
+../bin/cpumon
+```
+
+run tests:
+
+```bash
+make test
 ```
 
 tested for memory leaks using valgrind,\

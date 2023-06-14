@@ -14,11 +14,11 @@
 #include "../dataStructures/cpuperc.h"
 #include "../dataStructures/log_queue.h"
 
-void logger_stop();
-bool logger_running();
+void logger_stop(void);
+bool logger_running(void);
 
 int logger_thrd(void *);
-struct timespec logger_check();
+struct timespec logger_check(void);
 bool logger_set_args(log_queue *log_q);
 
 #endif

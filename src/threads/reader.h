@@ -14,12 +14,12 @@
 #include "../dataStructures/cpustat.h"
 #include "../dataStructures/log_queue.h"
 
-void reader_stop();
+void reader_stop(void);
 void reader_set_interval(long ms);
-bool reader_running();
+bool reader_running(void);
 
 int reader_thrd(void *);
-struct timespec reader_check();
+struct timespec reader_check(void);
 bool reader_set_args(cpustat_queue *analyzer_q, log_queue *logger_q);
 
 #endif
