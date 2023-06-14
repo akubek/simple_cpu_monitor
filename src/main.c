@@ -48,7 +48,7 @@ void _run_threads()
     sleep(1); // wait some time before starting watchdog
     thrd_create(&watchdog, watchdog_thrd, NULL);
 
-    thrd_join(logger, NULL);
+    thrd_join(printer, NULL);
     _end_threads();
 }
 
