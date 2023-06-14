@@ -43,10 +43,10 @@ void _run_threads()
 {
     thrd_create(&reader, reader_thrd, NULL);
     thrd_create(&analyzer, analyzer_thrd, NULL);
-    //thrd_create(&printer, printer_thrd, NULL);
+    thrd_create(&printer, printer_thrd, NULL);
     thrd_create(&logger, logger_thrd, NULL);
-    //sleep(1); // wait some time before starting watchdog
-    //thrd_create(&watchdog, watchdog_thrd, NULL);
+    sleep(1); // wait some time before starting watchdog
+    thrd_create(&watchdog, watchdog_thrd, NULL);
 
     thrd_join(logger, NULL);
     _end_threads();
