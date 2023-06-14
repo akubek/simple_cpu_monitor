@@ -65,7 +65,7 @@ cpuperc *cpuperc_dequeue(cpuperc_queue *q)
 void cpuperc_delete_q(cpuperc_queue *q)
 {
     cpuperc *elem;
-    while (elem = cpuperc_dequeue(q))
+    while ((elem = cpuperc_dequeue(q)) && elem != NULL)
     {
         free(elem->cores_perc);
         free(elem);

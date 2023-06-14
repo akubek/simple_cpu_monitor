@@ -64,7 +64,7 @@ cpustat *cpustat_dequeue(cpustat_queue *q)
 void cpustat_delete_q(cpustat_queue *q)
 {
     cpustat *elem;
-    while (elem = cpustat_dequeue(q))
+    while ((elem = cpustat_dequeue(q)) && elem != NULL)
     {
         free(elem->cores_stat);
         free(elem);

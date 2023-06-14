@@ -90,7 +90,7 @@ char *log_dequeue(log_queue *q)
 void log_delete_q(log_queue *q)
 {
     char *elem;
-    while (elem = log_dequeue(q))
+    while ((elem = log_dequeue(q)) && elem != NULL)
     {
         free(elem);
     }

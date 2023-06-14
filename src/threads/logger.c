@@ -43,9 +43,9 @@ int logger_thrd(void *)
 
 void _log_current_data(FILE *fp, log_queue *log_q)
 {
-    char *msg;
+    char *msg = NULL;
 
-    while (msg = log_dequeue(log_q))
+    while ((msg = log_dequeue(log_q)) && msg != NULL)
     {
         fprintf(fp, "%s\n", msg);
         free(msg);

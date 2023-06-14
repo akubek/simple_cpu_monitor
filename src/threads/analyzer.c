@@ -158,7 +158,7 @@ void _calc_usage_perc(cpustat_queue *newest_data, int core_count, float *usage)
 void _update_data(cpustat_queue *newest_data, cpustat_queue *q)
 {
     cpustat *elem;
-    while (elem = cpustat_dequeue(q))
+    while ((elem = cpustat_dequeue(q)) && elem != NULL)
     {
         cpustat_enqueue(newest_data, elem);
     }
