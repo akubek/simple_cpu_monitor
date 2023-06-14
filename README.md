@@ -22,7 +22,7 @@ or with clang:
 mkdir clang.build
 cd clang.build/
 cmake -DCMAKE_C_COMPILER=/usr/bin/clang ../src/
-cmake --build
+cmake --build .
 ```
 
 gcc flags added: "-Wall" "-Wextra"\
