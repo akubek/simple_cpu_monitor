@@ -1,7 +1,5 @@
 #include "main.h"
 
-// TODO tests
-
 thrd_t analyzer, printer, reader, logger, watchdog;
 cpustat_queue analyzer_q;
 cpuperc_queue printer_q;
