@@ -14,7 +14,7 @@ int log_enqueue(log_queue *q, char *log_msg, struct timespec t)
     {
         exit(1);
     }
-    log_node *search_node, *p;
+    log_node *search_node, *p = NULL;
     log_node *new_node = malloc(sizeof *new_node);
     if (new_node == NULL)
     {
@@ -32,13 +32,16 @@ int log_enqueue(log_queue *q, char *log_msg, struct timespec t)
     {
         // search based on time of msg creation
         search_node = q->back;
-        while (compare_timespec(search_node->t, new_node->t))
+        while (search_node != NULL && compare_timespec(search_node->t, new_node->t))
         {
+            p = search_node;
             search_node = search_node->prev;
         }
         // insert new node
-        p = search_node->next;
-        search_node->next = new_node;
+        if (search_node != NULL)
+        {
+            search_node->next = new_node;
+        }
         new_node->prev = search_node;
         new_node->next = p;
         if (p != NULL)
@@ -60,6 +63,12 @@ char *log_dequeue(log_queue *q)
     {
         exit(1);
     }
+    if (q->front == NULL)
+    {
+        q->size = 0;
+        mtx_unlock(&q->qmtx);
+        return NULL;
+    }
     log_node *old_front = q->front;
     q->front = q->front->next;
     if (q->front != NULL)
@@ -67,6 +76,10 @@ char *log_dequeue(log_queue *q)
         q->front->prev = NULL;
     }
     q->size--;
+    if (q->size == 0)
+    {
+        q->back = NULL;
+    }
 
     char *log_msg = old_front->log_msg;
     free(old_front);
@@ -77,9 +90,8 @@ char *log_dequeue(log_queue *q)
 void log_delete_q(log_queue *q)
 {
     char *elem;
-    while (q->front != NULL)
+    while (elem = log_dequeue(q))
     {
-        elem = log_dequeue(q);
         free(elem);
     }
     if (mtx_lock(&q->qmtx) == thrd_error)

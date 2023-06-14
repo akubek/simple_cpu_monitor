@@ -16,7 +16,8 @@ bool _analyzer_guard();
 // thread
 int analyzer_thrd(void *arg)
 {
-    if(!_analyzer_guard()) {
+    if (!_analyzer_guard())
+    {
         return 1;
     }
     _analyzer_run = true;
@@ -157,9 +158,8 @@ void _calc_usage_perc(cpustat_queue *newest_data, int core_count, float *usage)
 void _update_data(cpustat_queue *newest_data, cpustat_queue *q)
 {
     cpustat *elem;
-    while (q->front != NULL)
+    while (elem = cpustat_dequeue(q))
     {
-        elem = cpustat_dequeue(q);
         cpustat_enqueue(newest_data, elem);
     }
     // remove old datapoints

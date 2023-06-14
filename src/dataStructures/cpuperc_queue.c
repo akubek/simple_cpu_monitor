@@ -38,14 +38,23 @@ int cpuperc_enqueue(cpuperc_queue *q, cpuperc *cpu_perc)
 }
 
 cpuperc *cpuperc_dequeue(cpuperc_queue *q)
-{
+{ 
     if (mtx_lock(&q->qmtx) == thrd_error)
     {
         exit(1);
     }
+    if (q->size == 0)
+    {
+        mtx_unlock(&q->qmtx);
+        return NULL;
+    }
     cpuperc_node *old_front = q->front;
     q->front = q->front->next;
     q->size--;
+    if (q->size == 0)
+    {
+        q->back = NULL;
+    }
 
     cpuperc *cpu_perc = old_front->cpu_perc;
     free(old_front);
@@ -56,9 +65,8 @@ cpuperc *cpuperc_dequeue(cpuperc_queue *q)
 void cpuperc_delete_q(cpuperc_queue *q)
 {
     cpuperc *elem;
-    while (q->front != NULL)
+    while (elem = cpuperc_dequeue(q))
     {
-        elem = cpuperc_dequeue(q);
         free(elem->cores_perc);
         free(elem);
     }

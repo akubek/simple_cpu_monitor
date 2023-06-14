@@ -45,9 +45,8 @@ void _log_current_data(FILE *fp, log_queue *log_q)
 {
     char *msg;
 
-    while (log_q->size > 0)
+    while (msg = log_dequeue(log_q))
     {
-        msg = log_dequeue(log_q);
         fprintf(fp, "%s\n", msg);
         free(msg);
     }

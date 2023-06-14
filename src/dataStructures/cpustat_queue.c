@@ -42,9 +42,18 @@ cpustat *cpustat_dequeue(cpustat_queue *q)
     {
         exit(1);
     }
+    if (q->size == 0)
+    {
+        mtx_unlock(&q->qmtx);
+        return NULL;
+    }
     cpustat_node *old_front = q->front;
     q->front = q->front->next;
     q->size--;
+    if (q->size == 0)
+    {
+        q->back = NULL;
+    }
 
     cpustat *cpu_stat = old_front->cpu_stat;
     free(old_front);
@@ -55,9 +64,8 @@ cpustat *cpustat_dequeue(cpustat_queue *q)
 void cpustat_delete_q(cpustat_queue *q)
 {
     cpustat *elem;
-    while (q->front != NULL)
+    while (elem = cpustat_dequeue(q))
     {
-        elem = cpustat_dequeue(q);
         free(elem->cores_stat);
         free(elem);
     }

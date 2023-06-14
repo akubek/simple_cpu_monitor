@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <threads.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "../common/cpumon_util.h"
 
