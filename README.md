@@ -23,7 +23,7 @@ cd ../bin
 ```
 
 tested for memory leaks using valgrind,\
-note:\
+note, from ncurses FAQ:\
 Perhaps you used a tool such as dmalloc or valgrind to check for memory leaks. It will normally report a lot of memory still in use. That is normal.
 
 The ncurses configure script has an option, --disable-leaks, which you can use to continue the analysis. It tells ncurses to free memory if possible. However, most of the in-use memory is "permanent".
